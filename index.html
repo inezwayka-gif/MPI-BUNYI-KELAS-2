@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYO MENGENAL DUNIA BUNYI! - MPI Seni Budaya Kelas II SDN 2 PADAN</title>
+    <!-- Tailwind CSS untuk tata letak responsif dan modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka & Nunito untuk tipografi ramah anak -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk ikon edukatif -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Pengaturan Font Utama Ramah Anak */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 50%, #dcfce7 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, .font-kid {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Animasi Karakter & Elemen Interaktif */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes bounce-pop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.18) rotate(-4deg); }
+            70% { transform: scale(0.95) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .animate-sound-hit {
+            animation: bounce-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(250, 204, 21, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
+        .pulse-btn {
+            animation: pulse-ring 2s infinite;
+        }
+
+        /* Tombol 3D Bergaya Game Edukasi */
+        .btn-3d {
+            transition: all 0.12s ease;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* Pengaturan Khusus Cetak LKPD & Sertifikat */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-area, #printable-area * {
+                visibility: visible;
+            }
+            #printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
+                box-shadow: none !important;
+                padding: 10px !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col">
+
+    <!-- HEADER NAVIGASI & KONTROL AUDIO GLOBAL -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-sky-400 shadow-md px-3 py-2 md:px-6 no-print">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- Logo & Tombol Beranda -->
+            <div class="flex items-center gap-2 md:gap-3">
+                <button onclick="navigateTo('beranda')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white px-3 py-2 rounded-2xl font-kid font-bold flex items-center gap-2 text-sm md:text-base" title="Kembali ke Beranda">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="hidden sm:inline">Beranda</span>
+                </button>
+                <div class="leading-tight">
+                    <h1 class="text-base md:text-xl font-bold text-sky-600 tracking-wide">DUNIA BUNYI 🎵</h1>
+                    <p class="text-[11px] md:text-xs font-bold text-amber-600">Kelas II • SDN 2 PADAN</p>
+                </div>
+            </div>
+
+            <!-- Indikator Progres & Bintang -->
+            <div class="flex items-center gap-2 md:gap-4 bg-amber-50 border-2 border-amber-300 px-3 py-1.5 rounded-2xl">
+                <div class="flex items-center gap-1.5" title="Bintang Penghargaanmu">
+                    <i class="fas fa-star text-yellow-400 text-xl drop-shadow"></i>
+                    <span id="star-count" class="font-kid font-bold text-lg text-amber-700">0</span>
+                </div>
+                <div class="h-5 w-0.5 bg-amber-300"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-600 hidden md:inline">Progres:</span>
+                    <div class="w-20 md:w-28 bg-slate-200 rounded-full h-3 overflow-hidden border border-slate-300">
+                        <div id="progress-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 12%"></div>
+                    </div>
+                    <span id="progress-text" class="text-xs font-extrabold text-emerald-700">1/8</span>
+                </div>
+            </div>
+
+            <!-- Kontrol Suara, Musik Latar & Bantuan -->
+            <div class="flex items-center gap-1.5 md:gap-2">
+                <button onclick="toggleBgm()" id="bgm-btn" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-2xl text-xs md:text-sm font-bold flex items-center gap-1.5" title="Musik Latar">
+                    <i id="bgm-icon" class="fas fa-music"></i>
+                    <span class="hidden lg:inline">Musik: OFF</span>
+                </button>
+                <button onclick="speakCurrentInstruction()" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 px-3 py-2 rounded-2xl text-xs md:text-sm font-bold flex items-center gap-1.5" title="Dengarkan Petunjuk Suara">
+                    <i class="fas fa-volume-up text-base"></i>
+                    <span class="hidden md:inline">Petunjuk</span>
+                </button>
+                <button onclick="toggleHelpModal()" class="btn-3d bg-purple-500 hover:bg-purple-600 text-white px-3 py-2 rounded-2xl text-xs md:text-sm font-bold flex items-center gap-1.5" title="Bantuan Penggunaan">
+                    <i class="fas fa-question-circle text-base"></i>
+                    <span class="hidden lg:inline">Bantuan</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bar Navigasi 8 Menu Utama -->
+        <nav id="main-nav" class="max-w-7xl mx-auto mt-2 pt-2 border-t border-sky-100 flex overflow-x-auto gap-1.5 pb-1 no-scrollbar">
+            <button onclick="navigateTo('materi')" data-menu="materi" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-sky-100 text-sky-800 hover:bg-sky-200 transition flex items-center gap-1.5">
+                <span>📖</span> 1. Materi
+            </button>
+            <button onclick="navigateTo('simulasi')" data-menu="simulasi" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-amber-100 text-amber-800 hover:bg-amber-200 transition flex items-center gap-1.5">
+                <span>🎹</span> 2. Simulasi
+            </button>
+            <button onclick="navigateTo('studio')" data-menu="studio" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-pink-100 text-pink-800 hover:bg-pink-200 transition flex items-center gap-1.5">
+                <span>🎛️</span> Studio Musik
+            </button>
+            <button onclick="navigateTo('praktikum')" data-menu="praktikum" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition flex items-center gap-1.5">
+                <span>🔬</span> 3. Praktikum
+            </button>
+            <button onclick="navigateTo('game')" data-menu="game" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-orange-100 text-orange-800 hover:bg-orange-200 transition flex items-center gap-1.5">
+                <span>🎮</span> 4. Game
+            </button>
+            <button onclick="navigateTo('lkpd')" data-menu="lkpd" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-indigo-100 text-indigo-800 hover:bg-indigo-200 transition flex items-center gap-1.5">
+                <span>📝</span> 5. LKPD
+            </button>
+            <button onclick="navigateTo('evaluasi')" data-menu="evaluasi" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-rose-100 text-rose-800 hover:bg-rose-200 transition flex items-center gap-1.5">
+                <span>🏆</span> 6. Evaluasi
+            </button>
+            <button onclick="navigateTo('sertifikat')" data-menu="sertifikat" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-yellow-100 text-yellow-800 hover:bg-yellow-200 transition flex items-center gap-1.5">
+                <span>🎖️</span> Sertifikat
+            </button>
+            <button onclick="navigateTo('pengembang')" data-menu="pengembang" class="nav-pill shrink-0 px-3 py-1.5 rounded-xl font-kid font-semibold text-xs md:text-sm bg-teal-100 text-teal-800 hover:bg-teal-200 transition flex items-center gap-1.5">
+                <span>👩‍🏫</span> 7. Pengembang
+            </button>
+        </nav>
+    </header>
+
+    <!-- KARAKTER PEMANDU BIMO (BINTANG MUSIK) MELAYANG -->
+    <div id="bimo-guide" class="max-w-5xl mx-auto w-full px-4 pt-3 no-print">
+        <div class="bg-white/90 border-3 border-sky-300 rounded-3xl p-3 shadow-sm flex items-center gap-3 md:gap-4">
+            <!-- Ilustrasi SVG BIMO -->
+            <div onclick="bimoGreet()" class="cursor-pointer shrink-0 w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-2xl flex items-center justify-center shadow-md border-2 border-white animate-float" title="Klik BIMO untuk menyapa!">
+                <svg viewBox="0 0 100 100" class="w-12 h-12">
+                    <!-- Wajah Karakter Kartun Anak -->
+                    <circle cx="50" cy="52" r="36" fill="#FDE68A"/>
+                    <!-- Topi Musik -->
+                    <path d="M20 35 Q50 10 80 35 Z" fill="#0284C7"/>
+                    <rect x="15" y="33" width="70" height="7" rx="3.5" fill="#0369A1"/>
+                    <!-- Mata Ceria -->
+                    <circle cx="38" cy="50" r="5" fill="#1E293B"/>
+                    <circle cx="62" cy="50" r="5" fill="#1E293B"/>
+                    <circle cx="40" cy="48" r="1.8" fill="white"/>
+                    <circle cx="64" cy="48" r="1.8" fill="white"/>
+                    <!-- Pipi Merona -->
+                    <circle cx="28" cy="60" r="5" fill="#FDA4AF" opacity="0.7"/>
+                    <circle cx="72" cy="60" r="5" fill="#FDA4AF" opacity="0.7"/>
+                    <!-- Senyum Lebar -->
+                    <path d="M36 62 Q50 76 64 62" stroke="#1E293B" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <!-- Not Balok -->
+                    <text x="76" y="25" font-size="20" fill="#EA580C" font-weight="bold">♪</text>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center gap-2">
+                    <span class="bg-sky-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">BIMO • Bintang Musik</span>
+                    <button onclick="speakText(document.getElementById('bimo-speech').innerText)" class="text-sky-600 hover:text-sky-800 text-xs font-bold underline flex items-center gap-1">
+                        <i class="fas fa-volume-up"></i> Ulangi Suara
+                    </button>
+                </div>
+                <p id="bimo-speech" class="text-sm md:text-base font-bold text-slate-700 mt-1">
+                    Halo, Teman Musik! Aku BIMO! Ayo klik tombol MULAI BELAJAR untuk menjelajahi dunia bunyi bersama!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA DINAMIS -->
+    <main id="app-content" class="flex-1 max-w-6xl mx-auto w-full px-4 py-5">
+        <!-- Halaman akan dirender secara dinamis oleh JavaScript -->
+    </main>
+
+    <!-- NAVIGASI BAWAH (SEBELUMNYA / BERIKUTNYA) -->
+    <footer class="max-w-5xl mx-auto w-full px-4 pb-6 pt-2 flex justify-between items-center no-print">
+        <button id="prev-page-btn" onclick="navigateStep(-1)" class="btn-3d bg-white hover:bg-slate-100 text-slate-700 border-2 border-slate-300 px-5 py-2.5 rounded-2xl font-kid font-bold flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> Sebelumnya
+        </button>
+        <div class="text-center hidden sm:block">
+            <p class="text-xs font-bold text-slate-500">MPI Seni Budaya Kelas II Fase A • SDN 2 PADAN</p>
+        </div>
+        <button id="next-page-btn" onclick="navigateStep(1)" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-2xl font-kid font-bold flex items-center gap-2">
+            Berikutnya <i class="fas fa-arrow-right"></i>
+        </button>
+    </footer>
+
+    <!-- NOTIFIKASI UMPAN BALIK POSITIF (TOAST / MODAL RAMAH) -->
+    <div id="feedback-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center border-4 border-yellow-400 shadow-2xl transform transition-all">
+            <div id="feedback-emoji" class="text-6xl mb-3 animate-bounce">🌟</div>
+            <h3 id="feedback-title" class="text-2xl font-kid font-bold text-sky-600 mb-2">Hebat Sekali!</h3>
+            <p id="feedback-message" class="text-slate-700 font-semibold mb-5 text-base">Kamu berhasil menjawab dengan benar!</p>
+            <button onclick="closeFeedbackModal()" class="btn-3d w-full bg-emerald-500 hover:bg-emerald-600 text-white font-kid font-bold py-3 rounded-2xl text-lg">
+                Lanjutkan! 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL PETUNJUK PENGGUNAAN -->
+    <div id="help-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 border-4 border-purple-400 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-kid font-bold text-purple-600">📘 Petunjuk Penggunaan MPI</h3>
+                <button onclick="toggleHelpModal()" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
+            </div>
+            <ul class="space-y-3 text-slate-700 font-semibold text-sm md:text-base">
+                <li class="flex items-start gap-2.5"><span class="bg-sky-100 text-sky-700 px-2 py-0.5 rounded-lg font-bold">1</span> <span>Klik tombol <b>🔊 Petunjuk</b> atau <b>Ulangi Suara</b> untuk mendengarkan penjelasan dari BIMO.</span></li>
+                <li class="flex items-start gap-2.5"><span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-lg font-bold">2</span> <span>Pada menu <b>Simulasi & Materi</b>, sentuh gambar benda atau alat musik untuk mendengar bunyinya!</span></li>
+                <li class="flex items-start gap-2.5"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-lg font-bold">3</span> <span>Kumpulkan <b>Bintang ⭐</b> dari setiap kegiatan, Game, LKPD, dan Evaluasi.</span></li>
+                <li class="flex items-start gap-2.5"><span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-lg font-bold">4</span> <span>Cetak <b>LKPD</b> dan <b>Sertifikat Penghargaan</b> di akhir pembelajaran!</span></li>
+            </ul>
+            <button onclick="toggleHelpModal()" class="btn-3d mt-6 w-full bg-purple-500 hover:bg-purple-600 text-white font-kid font-bold py-3 rounded-2xl text-lg">
+                Aku Mengerti! 👍
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================================
+           1. STATUS APLIKASI & DATA PEMBELAJARAN
+           ========================================================================= */
+        const PAGES = ['beranda', 'materi', 'simulasi', 'studio', 'praktikum', 'game', 'lkpd', 'evaluasi', 'sertifikat', 'pengembang'];
+        
+        const state = {
+            currentPage: 'beranda',
+            visitedPages: new Set(['beranda']),
+            stars: 0,
+            bgmPlaying: false,
+            volume: 0.7,
+            studentName: '',
+            studentClass: 'II (Dua)',
+            materiTab: 0,
+            activeGame: 1,
+            game1Index: 0,
+            game1Score: 0,
+            game2SelectedLeft: null,
+            game2Matched: [],
+            game3Index: 0,
+            game3Score: 0,
+            evalAnswers: {},
+            evalSubmitted: false,
+            evalScore: 0,
+            studioPattern: [
+                [true, false, true, false, true, false, true, false],   // Drum
+                [false, false, true, false, false, false, true, false], // Tepuk
+                [false, true, false, true, false, true, false, true],   // Marakas
+                [true, false, false, false, true, false, false, false]  // Lonceng
+            ],
+            studioPlaying: false,
+            studioStep: 0
+        };
+
+        const PAGE_INSTRUCTIONS = {
+            beranda: "Selamat datang di Media Pembelajaran Interaktif Ayo Mengenal Dunia Bunyi! Dikembangkan oleh Ibu Ajumsinah, S.Pd. untuk siswa kelas dua SDN 2 Padan. Ayo klik tombol Mulai Belajar!",
+            materi: "Ini adalah halaman Materi. Pilih submateri di atas, baca penjelasannya, dan klik tombol dengarkan suara untuk mencoba bunyinya!",
+            simulasi: "Ayo bereksperimen di ruang Simulasi Bunyi! Klik setiap gambar untuk mendengar bunyinya. Coba juga pengatur keras dan pelan, serta bunyi panjang dan pendek!",
+            studio: "Selamat datang di Studio Kreasi Bunyi! Klik kotak warna-warni untuk membuat pola irama musikmu sendiri, lalu tekan tombol Putar Musik!",
+            praktikum: "Ayo menjadi Penemu Bunyi! Siapkan benda di sekitarmu seperti botol, pensil, dan sendok. Lakukan percobaan dengan hati-hati dan tulis hasil pengamatanmu!",
+            game: "Waktunya bermain sambil belajar! Ada tiga permainan seru: Tebak Sumber Bunyi, Pasangkan Bunyi, dan Detektif Bunyi. Ayo kumpulkan banyak bintang!",
+            lkpd: "Ini adalah Lembar Kerja Peserta Didik. Isi nama dan jawabanmu dengan teliti, lalu klik Simpan atau Cetak LKPD!",
+            evaluasi: "Ayo kerjakan sepuluh soal evaluasi ini dengan jujur dan teliti! Klik tombol speaker jika soal memiliki suara.",
+            sertifikat: "Selamat! Kamu bisa menuliskan namamu dan mencetak Sertifikat Penghargaan Detektif Bunyi di halaman ini!",
+            pengembang: "Halaman ini berisi informasi pengembang media pembelajaran, yaitu Ibu Ajumsinah, S.Pd. dari SDN 2 Padan."
+        };
+
+        /* =========================================================================
+           2. ENGINE AUDIO SINTESIS REAL-TIME (WEB AUDIO API) & NARASI (WEB SPEECH)
+           ========================================================================= */
+        let audioCtx = null;
+        let bgmInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Sintesis berbagai bunyi nyata tanpa bergantung pada file eksternal
+        function playSoundEffect(type, customVolume = null, customDuration = null) {
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const vol = (customVolume !== null ? customVolume : state.volume);
+
+                if (type === 'drum') {
+                    // Suara Drum (Dug... dug...)
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.exponentialRampToValueAtTime(42, now + 0.35);
+                    gain.gain.setValueAtTime(vol * 1.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } 
+                else if (type === 'lonceng') {
+                    // Suara Lonceng (Teng... teng...)
+                    [880, 1318.5, 1760].forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now);
+                        gain.gain.setValueAtTime((vol * 0.45) / (idx + 1), now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now);
+                        osc.stop(now + 1.1);
+                    });
+                } 
+                else if (type === 'gitar') {
+                    // Suara Petikan Gitar (Jreng...)
+                    const notes = [261.63, 329.63, 392.00, 523.25];
+                    notes.forEach((freq, i) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + i * 0.06);
+                        gain.gain.setValueAtTime(vol * 0.35, now + i * 0.06);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.85);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + i * 0.06);
+                        osc.stop(now + i * 0.06 + 0.85);
+                    });
+                } 
+                else if (type === 'marakas' || type === 'botol') {
+                    // Suara Marakas / Botol Biji (Cek-cek-cek)
+                    for (let k = 0; k < 2; k++) {
+                        const startT = now + k * 0.14;
+                        const bufferSize = audioCtx.sampleRate * 0.08;
+                        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                        const data = buffer.getChannelData(0);
+                        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                        
+                        const noise = audioCtx.createBufferSource();
+                        noise.buffer = buffer;
+                        const filter = audioCtx.createBiquadFilter();
+                        filter.type = 'highpass';
+                        filter.frequency.value = 3500;
+                        const gain = audioCtx.createGain();
+                        gain.gain.setValueAtTime(vol * 0.6, startT);
+                        gain.gain.exponentialRampToValueAtTime(0.01, startT + 0.08);
+                        
+                        noise.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        noise.start(startT);
+                    }
+                } 
+                else if (type === 'tepuk') {
+                    // Suara Tepuk Tangan (Prok!)
+                    const bufferSize = audioCtx.sampleRate * 0.15;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.03));
+                    
+                    const noise = audioCtx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 1200;
+                    const gain = audioCtx.createGain();
+                    gain.gain.setValueAtTime(vol * 0.9, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    noise.start(now);
+                } 
+                else if (type === 'burung') {
+                    // Suara Burung Berkicau (Cit... cit... cit...)
+                    [0, 0.18, 0.36].forEach((offset) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(2200, now + offset);
+                        osc.frequency.exponentialRampToValueAtTime(3400, now + offset + 0.06);
+                        osc.frequency.exponentialRampToValueAtTime(2500, now + offset + 0.12);
+                        gain.gain.setValueAtTime(vol * 0.35, now + offset);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.13);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.13);
+                    });
+                } 
+                else if (type === 'hujan') {
+                    // Suara Hujan (Tik... tik... rintik air)
+                    const bufferSize = audioCtx.sampleRate * 1.2;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.4;
+                    
+                    const noise = audioCtx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 1400;
+                    const gain = audioCtx.createGain();
+                    gain.gain.setValueAtTime(vol * 0.5, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    noise.start(now);
+                } 
+                else if (type === 'angin') {
+                    // Suara Angin Berembus (Wuuusss...)
+                    const bufferSize = audioCtx.sampleRate * 1.4;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                    
+                    const noise = audioCtx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.setValueAtTime(300, now);
+                    filter.frequency.linearRampToValueAtTime(650, now + 0.7);
+                    filter.frequency.linearRampToValueAtTime(280, now + 1.4);
+                    filter.Q.value = 4;
+                    
+                    const gain = audioCtx.createGain();
+                    gain.gain.setValueAtTime(0.01, now);
+                    gain.gain.linearRampToValueAtTime(vol * 0.65, now + 0.6);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 1.4);
+                    
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    noise.start(now);
+                }
+                else if (type === 'ketuk') {
+                    // Suara Ketukan Meja / Gelas (Tok! Tok!)
+                    [0, 0.2].forEach(offset => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(520, now + offset);
+                        osc.frequency.exponentialRampToValueAtTime(180, now + offset + 0.08);
+                        gain.gain.setValueAtTime(vol * 0.8, now + offset);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.09);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.09);
+                    });
+                }
+                else if (type === 'peluit_panjang' || type === 'peluit_pendek') {
+                    // Perbandingan Bunyi Panjang vs Pendek
+                    const dur = customDuration || (type === 'peluit_panjang' ? 1.5 : 0.25);
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1046.5, now); // Nada C6 jernih
+                    gain.gain.setValueAtTime(vol * 0.55, now);
+                    gain.gain.setValueAtTime(vol * 0.55, now + dur - 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + dur);
+                }
+                else if (type === 'benar') {
+                    // Efek Jawaban Benar
+                    [523.25, 659.25, 783.99].forEach((f, i) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(f, now + i * 0.09);
+                        gain.gain.setValueAtTime(0.3, now + i * 0.09);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.3);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + i * 0.09);
+                        osc.stop(now + i * 0.09 + 0.3);
+                    });
+                }
+                else if (type === 'salah') {
+                    // Efek Coba Lagi
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.linearRampToValueAtTime(160, now + 0.3);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.32);
+                }
+            } catch (e) {
+                // Abaikan jika browser membatasi audio sebelum interaksi pertama
+            }
+        }
+
+        // Narasi Suara Berbahasa Indonesia (Web Speech API)
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.95; // Sedikit lebih lambat agar jelas untuk kelas II SD
+                utterance.pitch = 1.15; // Nada ramah & ceria
+                const voices = window.speechSynthesis.getVoices();
+                const idVoice = voices.find(v => v.lang.includes('id'));
+                if (idVoice) utterance.voice = idVoice;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakCurrentInstruction() {
+            const msg = PAGE_INSTRUCTIONS[state.currentPage] || "Ayo belajar bunyi dengan gembira!";
+            document.getElementById('bimo-speech').innerText = msg;
+            speakText(msg);
+        }
+
+        function bimoGreet() {
+            const greetings = [
+                "Halo Teman Musik! Aku BIMO. Kamu hebat sekali hari ini!",
+                "Telinga kita adalah anugerah Tuhan untuk mendengar berbagai bunyi indah!",
+                "Ayo coba semua tombol alat musik dan kumpulkan banyak bintang!"
+            ];
+            const pick = greetings[Math.floor(Math.random() * greetings.length)];
+            document.getElementById('bimo-speech').innerText = pick;
+            playSoundEffect('lonceng', 0.3);
+            speakText(pick);
+        }
+
+        // Musik Latar Ceria Pelan (Agar tidak mengganggu materi)
+        function toggleBgm() {
+            initAudio();
+            state.bgmPlaying = !state.bgmPlaying;
+            const btn = document.getElementById('bgm-btn');
+            if (state.bgmPlaying) {
+                btn.classList.replace('bg-emerald-500', 'bg-amber-500');
+                btn.innerHTML = `<i class="fas fa-volume-up"></i> <span class="hidden lg:inline">Musik: ON</span>`;
+                const melody = [523.25, 587.33, 659.25, 523.25, 659.25, 783.99, 659.25, 587.33];
+                let idx = 0;
+                bgmInterval = setInterval(() => {
+                    if (!state.bgmPlaying) return;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(melody[idx % melody.length], audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime); // Sangat pelan
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.45);
+                    idx++;
+                }, 550);
+            } else {
+                btn.classList.replace('bg-amber-500', 'bg-emerald-500');
+                btn.innerHTML = `<i class="fas fa-music"></i> <span class="hidden lg:inline">Musik: OFF</span>`;
+                clearInterval(bgmInterval);
+            }
+        }
+
+        /* =========================================================================
+           3. SISTEM NAVIGASI, BINTANG & UMPAN BALIK
+           ========================================================================= */
+        function addStars(amount, reason = "") {
+            state.stars += amount;
+            document.getElementById('star-count').innerText = state.stars;
+            if (reason) {
+                document.getElementById('bimo-speech').innerText = `Yeay! +${amount} Bintang! ${reason}`;
+            }
+        }
+
+        function showFeedback(isSuccess, title, message) {
+            const modal = document.getElementById('feedback-modal');
+            document.getElementById('feedback-emoji').innerText = isSuccess ? '🌟🎉' : '🤔💡';
+            document.getElementById('feedback-title').innerText = title;
+            document.getElementById('feedback-title').className = isSuccess 
+                ? 'text-2xl font-kid font-bold text-emerald-600 mb-2' 
+                : 'text-2xl font-kid font-bold text-amber-600 mb-2';
+            document.getElementById('feedback-message').innerText = message;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            playSoundEffect(isSuccess ? 'benar' : 'salah');
+            speakText(title + ". " + message);
+        }
+
+        function closeFeedbackModal() {
+            const modal = document.getElementById('feedback-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function toggleHelpModal() {
+            const modal = document.getElementById('help-modal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+        }
+
+        function navigateTo(page) {
+            if (state.studioPlaying) toggleStudioPlay(); // Hentikan studio jika pindah halaman
+            state.currentPage = page;
+            state.visitedPages.add(page);
+            
+            // Update Progres Belajar
+            const pct = Math.min(100, Math.round((state.visitedPages.size / PAGES.length) * 100));
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-text').innerText = `${state.visitedPages.size}/${PAGES.length}`;
+
+            // Update Highlight Menu
+            document.querySelectorAll('.nav-pill').forEach(btn => {
+                if (btn.dataset.menu === page) {
+                    btn.classList.add('ring-3', 'ring-sky-500', 'scale-105', 'font-bold');
+                } else {
+                    btn.classList.remove('ring-3', 'ring-sky-500', 'scale-105', 'font-bold');
+                }
+            });
+
+            // Update Tombol Prev/Next
+            const idx = PAGES.indexOf(page);
+            document.getElementById('prev-page-btn').style.visibility = idx <= 0 ? 'hidden' : 'visible';
+            document.getElementById('next-page-btn').style.visibility = idx >= PAGES.length - 1 ? 'hidden' : 'visible';
+
+            // Update Ucapan BIMO
+            document.getElementById('bimo-speech').innerText = PAGE_INSTRUCTIONS[page];
+
+            renderCurrentPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function navigateStep(dir) {
+            const idx = PAGES.indexOf(state.currentPage);
+            const nextIdx = idx + dir;
+            if (nextIdx >= 0 && nextIdx < PAGES.length) {
+                navigateTo(PAGES[nextIdx]);
+            }
+        }
+
+        /* =========================================================================
+           4. RENDER HALAMAN-HALAMAN MPI
+           ========================================================================= */
+        function renderCurrentPage() {
+            const container = document.getElementById('app-content');
+            switch (state.currentPage) {
+                case 'beranda': renderBeranda(container); break;
+                case 'materi': renderMateri(container); break;
+                case 'simulasi': renderSimulasi(container); break;
+                case 'studio': renderStudio(container); break;
+                case 'praktikum': renderPraktikum(container); break;
+                case 'game': renderGame(container); break;
+                case 'lkpd': renderLkpd(container); break;
+                case 'evaluasi': renderEvaluasi(container); break;
+                case 'sertifikat': renderSertifikat(container); break;
+                case 'pengembang': renderPengembang(container); break;
+            }
+        }
+
+        /* --- HALAMAN 0: BERANDA --- */
+        function renderBeranda(container) {
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-6 md:p-10 shadow-xl border-4 border-sky-400 text-center relative overflow-hidden">
+                    <!-- Hiasan Not Musik -->
+                    <div class="text-4xl text-yellow-400 absolute top-4 left-6 animate-bounce">🎵</div>
+                    <div class="text-4xl text-pink-400 absolute top-6 right-8 animate-pulse">🎶</div>
+
+                    <span class="inline-block bg-amber-300 text-amber-950 font-kid font-bold px-4 py-1.5 rounded-full text-sm md:text-base mb-3 shadow-xs">
+                        SENI BUDAYA (SENI MUSIK) • KELAS II SD • FASE A
+                    </span>
+
+                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-kid font-bold text-sky-600 drop-shadow-xs mb-3 leading-tight">
+                        AYO MENGENAL<br><span class="text-orange-500">DUNIA BUNYI!</span>
+                    </h1>
+
+                    <p class="text-lg md:text-xl font-bold text-emerald-700 mb-6">
+                        "Selamat Datang, Teman Musik! Ayo belajar mendengar, mengenali, dan menciptakan bunyi!"
+                    </p>
+
+                    <!-- Ilustrasi SVG Anak-anak Bermain Alat Musik -->
+                    <div class="max-w-lg mx-auto my-4 bg-gradient-to-b from-sky-100 to-emerald-100 rounded-3xl p-5 border-2 border-sky-200 shadow-inner">
+                        <svg viewBox="0 0 400 180" class="w-full h-auto">
+                            <!-- Latar Pelangi Pastel -->
+                            <path d="M40 160 A160 140 0 0 1 360 160" fill="none" stroke="#FCA5A5" stroke-width="10" opacity="0.5"/>
+                            <path d="M55 160 A145 125 0 0 1 345 160" fill="none" stroke="#FDE047" stroke-width="10" opacity="0.6"/>
+                            <path d="M70 160 A130 110 0 0 1 330 160" fill="none" stroke="#86EFAC" stroke-width="10" opacity="0.6"/>
+                            
+                            <!-- Anak 1: Bermain Drum (Kiri) -->
+                            <circle cx="105" cy="75" r="24" fill="#FDE68A"/>
+                            <path d="M81 72 Q105 45 129 72" fill="#1E293B"/>
+                            <circle cx="97" cy="75" r="3" fill="#1E293B"/>
+                            <circle cx="113" cy="75" r="3" fill="#1E293B"/>
+                            <path d="M98 84 Q105 91 112 84" stroke="#1E293B" stroke-width="2.5" fill="none"/>
+                            <rect x="75" y="108" width="60" height="45" rx="8" fill="#EF4444" stroke="#B91C1C" stroke-width="3"/>
+                            <ellipse cx="105" cy="108" rx="30" ry="8" fill="#FEF3C7"/>
+                            <line x1="70" y1="92" x2="100" y2="108" stroke="#92400E" stroke-width="4" stroke-linecap="round"/>
+                            <line x1="140" y1="92" x2="110" y2="108" stroke="#92400E" stroke-width="4" stroke-linecap="round"/>
+
+                            <!-- Anak 2: Bernyanyi & Lonceng (Tengah) -->
+                            <circle cx="200" cy="65" r="26" fill="#FED7AA"/>
+                            <circle cx="176" cy="52" r="10" fill="#78350F"/>
+                            <circle cx="224" cy="52" r="10" fill="#78350F"/>
+                            <circle cx="192" cy="65" r="3" fill="#1E293B"/>
+                            <circle cx="208" cy="65" r="3" fill="#1E293B"/>
+                            <circle cx="200" cy="76" r="5" fill="#F43F5E"/>
+                            <rect x="175" y="95" width="50" height="58" rx="14" fill="#3B82F6"/>
+                            <!-- Lonceng Emas -->
+                            <path d="M235 80 Q245 65 255 80 L260 98 L230 98 Z" fill="#FACC15" stroke="#CA8A04" stroke-width="2"/>
+                            <circle cx="245" cy="100" r="4" fill="#CA8A04"/>
+
+                            <!-- Anak 3: Bermain Gitar (Kanan) -->
+                            <circle cx="295" cy="75" r="24" fill="#FDE68A"/>
+                            <path d="M272 70 Q295 45 318 70" fill="#92400E"/>
+                            <circle cx="287" cy="75" r="3" fill="#1E293B"/>
+                            <circle cx="303" cy="75" r="3" fill="#1E293B"/>
+                            <path d="M288 84 Q295 91 302 84" stroke="#1E293B" stroke-width="2.5" fill="none"/>
+                            <ellipse cx="295" cy="128" rx="26" ry="20" fill="#F97316" stroke="#C2410C" stroke-width="3"/>
+                            <circle cx="295" cy="128" r="7" fill="#7C2D12"/>
+                            <rect x="318" y="115" width="38" height="8" rx="3" fill="#78350F" transform="rotate(-20 318 115)"/>
+                        </svg>
+                    </div>
+
+                    <!-- Tombol Utama Mulai Belajar -->
+                    <div class="flex flex-wrap justify-center gap-4 my-6">
+                        <button onclick="playSoundEffect('benar'); navigateTo('materi')" class="btn-3d pulse-btn bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white font-kid font-bold text-xl md:text-2xl px-8 py-4 rounded-3xl flex items-center gap-3">
+                            <i class="fas fa-play-circle text-3xl"></i> MULAI BELAJAR
+                        </button>
+                        <button onclick="navigateTo('simulasi')" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-kid font-bold text-lg md:text-xl px-6 py-4 rounded-3xl flex items-center gap-2">
+                            <span>🎹</span> Coba Simulasi Bunyi
+                        </button>
+                    </div>
+
+                    <!-- Identitas Sekolah & Guru -->
+                    <div class="mt-6 pt-4 border-t-2 border-dashed border-sky-200 flex flex-col sm:flex-row justify-center items-center gap-3 text-sm md:text-base font-bold text-slate-600">
+                        <span class="bg-sky-50 px-4 py-1.5 rounded-xl border border-sky-200">👩‍🏫 Pengembang: <b>Ajumsinah, S.Pd.</b></span>
+                        <span class="bg-emerald-50 px-4 py-1.5 rounded-xl border border-emerald-200">🏫 Sekolah: <b>SDN 2 PADAN</b></span>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* --- HALAMAN 1: MATERI PEMBELAJARAN --- */
+        const MATERI_SECTIONS = [
+            {
+                title: "A. Mengenal Bunyi",
+                color: "sky",
+                desc: "Bunyi adalah sesuatu yang dapat kita dengar menggunakan telinga. Di sekitar kita ada banyak sekali bunyi yang berbeda-beda!",
+                example: "Contoh: Suara ibu memanggil, suara kicauan burung pagi hari, dan suara bel sekolah.",
+                cards: [
+                    { name: "Telinga Mendengar", emoji: "👂", sound: "lonceng", desc: "Telinga menangkap bunyi di sekitar kita." },
+                    { name: "Bel Sekolah", emoji: "🔔", sound: "lonceng", desc: "Bunyi teng... teng... tanda masuk kelas." }
+                ]
+            },
+            {
+                title: "B. Sumber Bunyi",
+                color: "amber",
+                desc: "Benda atau makhluk yang menghasilkan bunyi disebut Sumber Bunyi. Sumber bunyi berasal dari alam, manusia, benda sekitar, dan alat musik.",
+                example: "Ayo sentuh setiap kartu di bawah ini untuk mendengar asal sumber bunyinya!",
+                cards: [
+                    { name: "Alam: Hujan", emoji: "🌧️", sound: "hujan", desc: "Bunyi rintik air hujan: tik... tik... tik..." },
+                    { name: "Alam: Burung", emoji: "🐦", sound: "burung", desc: "Kicauan burung: cit... cit... cit..." },
+                    { name: "Manusia: Tepuk Tangan", emoji: "👏", sound: "tepuk", desc: "Tepuk tangan: prok... prok... prok..." },
+                    { name: "Benda: Meja Diketuk", emoji: "🪵", sound: "ketuk", desc: "Meja diketuk pensil: tok... tok... tok..." },
+                    { name: "Alat Musik: Drum", emoji: "🥁", sound: "drum", desc: "Drum dipukul: dug... dug... dug..." },
+                    { name: "Alat Musik: Gitar", emoji: "🎸", sound: "gitar", desc: "Gitar dipetik: jreng... jreng..." }
+                ]
+            },
+            {
+                title: "C. Bunyi Keras dan Pelan",
+                color: "rose",
+                desc: "Bunyi memiliki kuat dan lemah. Bunyi yang terdengar kuat disebut bunyi keras. Bunyi yang terdengar lemah disebut bunyi pelan.",
+                example: "Bandingkan bunyi drum yang dipukul kuat dengan rintik hujan yang lembut!",
+                cards: [
+                    { name: "Bunyi Keras (Drum)", emoji: "🥁🔊", sound: "drum", vol: 1.0, desc: "Terdengar kuat dan lantang di telinga." },
+                    { name: "Bunyi Pelan (Hujan)", emoji: "🌦️🔉", sound: "hujan", vol: 0.25, desc: "Terdengar lembut dan pelan di telinga." }
+                ]
+            },
+            {
+                title: "D. Bunyi Panjang dan Pendek",
+                color: "emerald",
+                desc: "Setiap bunyi memiliki lama waktu (durasi). Ada bunyi yang terdengar lama (panjang) dan ada bunyi yang terdengar sebentar (pendek).",
+                example: "Klik tombol di bawah untuk membedakan bunyi panjang dan bunyi pendek!",
+                cards: [
+                    { name: "Bunyi Panjang", emoji: "📯〰️", sound: "peluit_panjang", desc: "Bunyi terdengar lama: Tuuuuuuuut..." },
+                    { name: "Bunyi Pendek", emoji: "👏⚡", sound: "peluit_pendek", desc: "Bunyi terdengar sebentar: Tut!" }
+                ]
+            },
+            {
+                title: "E. Cara Menghasilkan Bunyi",
+                color: "purple",
+                desc: "Benda dapat berbunyi jika digetarkan. Cara menghasilkan bunyi bermacam-macam: dipukul, diketuk, digoyangkan, dipetik, ditiup, dan ditepuk.",
+                example: "Sentuh kartu untuk mendengar bunyi dari berbagai cara memainkannya!",
+                cards: [
+                    { name: "Dipukul (Drum)", emoji: "🥁", sound: "drum", desc: "Dipukul menggunakan stik drum." },
+                    { name: "Digoyangkan (Marakas)", emoji: "🪇", sound: "marakas", desc: "Digoyangkan agar biji di dalamnya berbunyi." },
+                    { name: "Dipetik (Gitar)", emoji: "🎸", sound: "gitar", desc: "Senar gitar dipetik dengan jari." },
+                    { name: "Ditepuk (Tangan)", emoji: "👏", sound: "tepuk", desc: "Kedua telapak tangan ditepukkan." }
+                ]
+            }
+        ];
+
+        function renderMateri(container) {
+            const sec = MATERI_SECTIONS[state.materiTab];
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-5 md:p-8 shadow-xl border-4 border-sky-400">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <h2 class="text-2xl md:text-3xl font-kid font-bold text-sky-700">📖 Materi Pembelajaran Bunyi</h2>
+                        <button onclick="speakText('${sec.title}. ${sec.desc} ${sec.example}')" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-volume-up"></i> Bacakan Materi
+                        </button>
+                    </div>
+
+                    <!-- Tab Submateri -->
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        ${MATERI_SECTIONS.map((m, i) => `
+                            <button onclick="state.materiTab=${i}; renderMateri(document.getElementById('app-content'));" 
+                                class="btn-3d px-4 py-2 rounded-2xl font-kid font-bold text-sm md:text-base transition ${state.materiTab === i ? 'bg-sky-500 text-white' : 'bg-sky-100 text-sky-800 hover:bg-sky-200'}">
+                                ${m.title}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- Kotak Penjelasan Utama -->
+                    <div class="bg-${sec.color}-50 border-3 border-${sec.color}-300 rounded-3xl p-5 mb-6">
+                        <h3 class="text-xl md:text-2xl font-kid font-bold text-${sec.color}-800 mb-2">${sec.title}</h3>
+                        <p class="text-base md:text-lg font-bold text-slate-700 leading-relaxed mb-3">${sec.desc}</p>
+                        <div class="bg-white/80 rounded-2xl p-3 border border-${sec.color}-200 text-sm md:text-base font-bold text-${sec.color}-700">
+                            💡 ${sec.example}
+                        </div>
+                    </div>
+
+                    <!-- Kartu Contoh Interaktif Bersuara -->
+                    <h4 class="font-kid font-bold text-lg text-slate-700 mb-3">👆 Klik gambar di bawah untuk mendengarkan bunyinya:</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${sec.cards.map((c, idx) => `
+                            <div onclick="triggerCardSound(this, '${c.sound}', ${c.vol || 'null'})" 
+                                class="cursor-pointer bg-gradient-to-b from-white to-sky-50 hover:to-amber-50 border-3 border-sky-200 hover:border-amber-400 rounded-3xl p-5 text-center shadow-md transition transform hover:-translate-y-1">
+                                <div class="text-5xl mb-3 select-none">${c.emoji}</div>
+                                <h5 class="font-kid font-bold text-lg text-slate-800 mb-1">${c.name}</h5>
+                                <p class="text-sm font-semibold text-slate-600 mb-3">${c.desc}</p>
+                                <span class="inline-flex items-center gap-1.5 bg-sky-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-full">
+                                    <i class="fas fa-volume-up"></i> Dengarkan Bunyi
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function triggerCardSound(el, soundType, customVol = null) {
+            el.classList.remove('animate-sound-hit');
+            void el.offsetWidth; // trigger reflow
+            el.classList.add('animate-sound-hit');
+            playSoundEffect(soundType, customVol);
+        }
+
+        /* --- HALAMAN 2: SIMULASI BUNYI INTERAKTIF --- */
+        const SIMULASI_OBJECTS = [
+            { id: 'drum', name: 'Drum', emoji: '🥁', onomatopoeia: 'Dug... dug... dug!', color: 'bg-red-100 border-red-400' },
+            { id: 'lonceng', name: 'Lonceng', emoji: '🔔', onomatopoeia: 'Teng... teng... teng!', color: 'bg-yellow-100 border-yellow-400' },
+            { id: 'gitar', name: 'Gitar', emoji: '🎸', onomatopoeia: 'Jreng... jreng...', color: 'bg-orange-100 border-orange-400' },
+            { id: 'marakas', name: 'Marakas', emoji: '🪇', onomatopoeia: 'Cek... cek... cek!', color: 'bg-purple-100 border-purple-400' },
+            { id: 'tepuk', name: 'Tepuk Tangan', emoji: '👏', onomatopoeia: 'Prok... prok... prok!', color: 'bg-pink-100 border-pink-400' },
+            { id: 'burung', name: 'Burung Berkicau', emoji: '🐦', onomatopoeia: 'Cit... cit... cit!', color: 'bg-sky-100 border-sky-400' },
+            { id: 'hujan', name: 'Suara Hujan', emoji: '🌧️', onomatopoeia: 'Tik... tik... tik!', color: 'bg-indigo-100 border-indigo-400' },
+            { id: 'angin', name: 'Suara Angin', emoji: '🌬️', onomatopoeia: 'Wuuusss... wuuusss!', color: 'bg-emerald-100 border-emerald-400' }
+        ];
+
+        let lastSimulasiSound = 'drum';
+
+        function renderSimulasi(container) {
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-5 md:p-8 shadow-xl border-4 border-amber-400">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-kid font-bold text-amber-600">🎹 Simulasi Dunia Bunyi</h2>
+                            <p class="text-sm md:text-base font-bold text-slate-600">Sentuh gambar benda atau alam di bawah ini untuk mendengar bunyinya!</p>
+                        </div>
+                        <button onclick="playSoundEffect(lastSimulasiSound)" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2.5 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-redo"></i> Putar Ulang Bunyi Terakhir
+                        </button>
+                    </div>
+
+                    <!-- Kontrol Eksperimen Keras/Pelan & Panjang/Pendek -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <!-- Pengatur Keras & Pelan -->
+                        <div class="bg-sky-50 border-2 border-sky-300 rounded-2xl p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-kid font-bold text-sky-800">🔊 Atur Bunyi Keras & Pelan</span>
+                                <span id="vol-label" class="bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">${Math.round(state.volume * 100)}%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold text-slate-600">🔉 Pelan</span>
+                                <input type="range" min="10" max="100" value="${Math.round(state.volume * 100)}" 
+                                    oninput="state.volume = this.value / 100; document.getElementById('vol-label').innerText = this.value + '%';"
+                                    class="w-full accent-sky-500 cursor-pointer h-3 rounded-lg">
+                                <span class="text-xs font-bold text-slate-600">🔊 Keras</span>
+                            </div>
+                        </div>
+
+                        <!-- Pembanding Bunyi Panjang & Pendek -->
+                        <div class="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 flex flex-col justify-between">
+                            <span class="font-kid font-bold text-emerald-800 mb-2">⏱️ Bandingkan Bunyi Panjang & Pendek</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="playSoundEffect('peluit_panjang'); document.getElementById('sim-status').innerText='Bunyi PANJANG: Tuuuuuuuut... (Terdengar lama)'" 
+                                    class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-3 rounded-xl text-sm">
+                                    〰️ Bunyi Panjang
+                                </button>
+                                <button onclick="playSoundEffect('peluit_pendek'); document.getElementById('sim-status').innerText='Bunyi PENDEK: Tut! (Terdengar sebentar)'" 
+                                    class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-3 rounded-xl text-sm">
+                                    ⚡ Bunyi Pendek
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layar Status Bunyi Aktif -->
+                    <div class="bg-slate-800 text-yellow-300 font-kid text-center py-3 px-4 rounded-2xl mb-6 text-lg md:text-xl shadow-inner">
+                        🎵 <span id="sim-status">Klik salah satu gambar di bawah untuk mulai!</span>
+                    </div>
+
+                    <!-- Grid 8 Objek Interaktif -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        ${SIMULASI_OBJECTS.map(obj => `
+                            <button onclick="runSimulasiObj(this, '${obj.id}', '${obj.name}', '${obj.onomatopoeia}')" 
+                                class="btn-3d ${obj.color} border-3 rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center text-center transition">
+                                <span class="text-5xl md:text-6xl mb-2">${obj.emoji}</span>
+                                <span class="font-kid font-bold text-lg text-slate-800">${obj.name}</span>
+                                <span class="text-xs font-bold text-slate-600 mt-1 bg-white/70 px-2.5 py-0.5 rounded-full">${obj.onomatopoeia}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function runSimulasiObj(btn, id, name, text) {
+            lastSimulasiSound = id;
+            btn.classList.remove('animate-sound-hit');
+            void btn.offsetWidth;
+            btn.classList.add('animate-sound-hit');
+            document.getElementById('sim-status').innerText = `${name}: "${text}"`;
+            playSoundEffect(id);
+        }
+
+        /* --- FITUR TAMBAHAN: STUDIO KREASI BUNYI (BEAT MAKER ANAK) --- */
+        let studioTimer = null;
+        const STUDIO_TRACKS = [
+            { name: 'Drum', emoji: '🥁', sound: 'drum', color: 'bg-red-500' },
+            { name: 'Tepuk', emoji: '👏', sound: 'tepuk', color: 'bg-pink-500' },
+            { name: 'Marakas', emoji: '🪇', sound: 'marakas', color: 'bg-purple-500' },
+            { name: 'Lonceng', emoji: '🔔', sound: 'lonceng', color: 'bg-amber-500' }
+        ];
+
+        function renderStudio(container) {
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-5 md:p-8 shadow-xl border-4 border-pink-400">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-kid font-bold text-pink-600">🎛️ Studio Kreasi Pola Bunyi</h2>
+                            <p class="text-sm md:text-base font-bold text-slate-600">Gabungkan suara drum, tepuk tangan, marakas, dan lonceng untuk membuat irama musikmu!</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="toggleStudioPlay()" id="studio-play-btn" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-kid font-bold px-5 py-2.5 rounded-2xl flex items-center gap-2">
+                                <i class="fas ${state.studioPlaying ? 'fa-stop' : 'fa-play'}"></i> ${state.studioPlaying ? 'Berhenti' : 'Putar Musik'}
+                            </button>
+                            <button onclick="clearStudio()" class="btn-3d bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-sm">
+                                Hapus Semua
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grid Sequencer 4 Alat x 8 Ketukan -->
+                    <div class="overflow-x-auto pb-2">
+                        <div class="min-w-[560px] space-y-3 bg-slate-50 p-4 rounded-3xl border-2 border-pink-200">
+                            ${STUDIO_TRACKS.map((track, rIdx) => `
+                                <div class="flex items-center gap-2">
+                                    <div class="w-28 shrink-0 flex items-center gap-2 font-kid font-bold text-slate-700 bg-white px-3 py-2 rounded-xl border border-slate-200">
+                                        <span class="text-2xl">${track.emoji}</span>
+                                        <span>${track.name}</span>
+                                    </div>
+                                    <div class="flex-1 grid grid-cols-8 gap-2">
+                                        ${state.studioPattern[rIdx].map((active, cIdx) => `
+                                            <button id="cell-${rIdx}-${cIdx}" onclick="toggleStudioCell(${rIdx}, ${cIdx})" 
+                                                class="h-12 rounded-xl border-2 transition font-bold text-white flex items-center justify-center ${active ? track.color + ' border-slate-800 shadow-md scale-105' : 'bg-white border-slate-300 hover:bg-pink-50'}">
+                                                ${active ? '♪' : cIdx + 1}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleStudioCell(r, c) {
+            state.studioPattern[r][c] = !state.studioPattern[r][c];
+            if (state.studioPattern[r][c]) {
+                playSoundEffect(STUDIO_TRACKS[r].sound);
+            }
+            renderStudio(document.getElementById('app-content'));
+        }
+
+        function clearStudio() {
+            state.studioPattern = state.studioPattern.map(row => row.map(() => false));
+            renderStudio(document.getElementById('app-content'));
+        }
+
+        function toggleStudioPlay() {
+            state.studioPlaying = !state.studioPlaying;
+            if (state.studioPlaying) {
+                initAudio();
+                state.studioStep = 0;
+                studioTimer = setInterval(() => {
+                    // Reset highlight kolom sebelumnya
+                    document.querySelectorAll('[id^="cell-"]').forEach(el => el.classList.remove('ring-4', 'ring-yellow-400'));
+                    
+                    for (let r = 0; r < 4; r++) {
+                        const cell = document.getElementById(`cell-${r}-${state.studioStep}`);
+                        if (cell) cell.classList.add('ring-4', 'ring-yellow-400');
+                        if (state.studioPattern[r][state.studioStep]) {
+                            playSoundEffect(STUDIO_TRACKS[r].sound);
+                        }
+                    }
+                    state.studioStep = (state.studioStep + 1) % 8;
+                }, 380);
+            } else {
+                clearInterval(studioTimer);
+                document.querySelectorAll('[id^="cell-"]').forEach(el => el.classList.remove('ring-4', 'ring-yellow-400'));
+            }
+            renderStudio(document.getElementById('app-content'));
+        }
+
+        /* --- HALAMAN 3: PRAKTIKUM --- */
+        function renderPraktikum(container) {
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-5 md:p-8 shadow-xl border-4 border-emerald-400">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                        <div>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">KEGIATAN PRAKTIKUM MANDIRI</span>
+                            <h2 class="text-2xl md:text-3xl font-kid font-bold text-emerald-700 mt-1">🔬 Ayo Menjadi Penemu Bunyi!</h2>
+                        </div>
+                        <button onclick="speakText('Ayo menjadi penemu bunyi! Siapkan botol plastik, beras, gelas plastik, sendok, pensil, dan karet gelang. Lakukan percobaan bersama guru dan jangan memukul benda terlalu keras ya!')" 
+                            class="btn-3d bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-volume-up"></i> Dengar Petunjuk
+                        </button>
+                    </div>
+
+                    <!-- Kotak Peringatan Keselamatan -->
+                    <div class="bg-amber-50 border-l-8 border-amber-500 p-4 rounded-2xl mb-6 flex items-center gap-3">
+                        <span class="text-3xl">⚠️</span>
+                        <p class="text-sm md:text-base font-bold text-amber-900">
+                            Ingat Keselamatan: Lakukan kegiatan dengan pengawasan Ibu Guru. Jangan menggunakan benda tajam dan jangan memukul benda terlalu keras!
+                        </p>
+                    </div>
+
+                    <!-- Alat dan Bahan -->
+                    <h3 class="font-kid font-bold text-xl text-slate-800 mb-3">🧰 Alat dan Bahan yang Disiapkan:</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-6">
+                        ${[
+                            { name: 'Botol Plastik', emoji: '🧴' },
+                            { name: 'Beras / Biji', emoji: '🌾' },
+                            { name: 'Gelas Plastik', emoji: '🥤' },
+                            { name: 'Sendok', emoji: '🥄' },
+                            { name: 'Pensil', emoji: '✏️' },
+                            { name: 'Karet Gelang', emoji: '⭕' }
+                        ].map(item => `
+                            <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 text-center">
+                                <div class="text-3xl mb-1">${item.emoji}</div>
+                                <div class="text-xs md:text-sm font-bold text-emerald-900">${item.name}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Langkah Praktikum & Kolom Pengamatan -->
+                    <h3 class="font-kid font-bold text-xl text-slate-800 mb-3">📋 Langkah Percobaan & Catatan Pengamatan:</h3>
+                    <div class="space-y-3 mb-6">
+                        ${[
+                            { step: '1. Ketuk meja menggunakan pensil dengan pelan.', sound: 'ketuk', placeholder: 'Contoh: Bunyi tok... tok... pelan' },
+                            { step: '2. Goyangkan botol plastik yang diisi beras/biji-bijian.', sound: 'botol', placeholder: 'Contoh: Bunyi cek... cek... seperti marakas' },
+                            { step: '3. Ketuk gelas plastik secara perlahan menggunakan sendok.', sound: 'lonceng', placeholder: 'Contoh: Bunyi ting... ting... nyaring' },
+                            { step: '4. Petik karet gelang yang direntangkan dengan aman.', sound: 'gitar', placeholder: 'Contoh: Bunyi jreng... bergetar' },
+                            { step: '5. Tepukkan kedua tangan dengan irama ceria.', sound: 'tepuk', placeholder: 'Contoh: Bunyi prok... prok... keras' }
+                        ].map((item, i) => `
+                            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <button onclick="playSoundEffect('${item.sound}')" class="btn-3d bg-sky-500 text-white w-10 h-10 rounded-xl shrink-0 flex items-center justify-center" title="Dengar Contoh Bunyi">
+                                        <i class="fas fa-volume-up"></i>
+                                    </button>
+                                    <span class="font-bold text-slate-800 text-sm md:text-base">${item.step}</span>
+                                </div>
+                                <input type="text" placeholder="${item.placeholder}" class="w-full md:w-72 px-3 py-2 rounded-xl border-2 border-emerald-300 focus:outline-none focus:border-emerald-500 text-sm font-semibold">
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Pertanyaan Refleksi -->
+                    <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 mb-6">
+                        <label class="block font-kid font-bold text-sky-900 mb-2">💭 Pertanyaan Refleksi: Benda mana yang paling kamu sukai bunyinya? Mengapa?</label>
+                        <textarea rows="2" placeholder="Tuliskan pendapatmu di sini ya..." class="w-full p-3 rounded-xl border-2 border-sky-300 text-sm font-semibold"></textarea>
+                    </div>
+
+                    <button onclick="addStars(5, 'Kamu telah menyelesaikan Praktikum Penemu Bunyi!'); showFeedback(true, 'Praktikum Selesai!', 'Luar biasa! Kamu berhasil mengeksplorasi bunyi dari benda di sekitarmu dan mendapat 5 Bintang!')" 
+                        class="btn-3d w-full bg-emerald-500 hover:bg-emerald-600 text-white font-kid font-bold py-4 rounded-2xl text-lg md:text-xl">
+                        ✅ Selesai Praktikum (+5 Bintang ⭐)
+                    </button>
+                </div>
+            `;
+        }
+
+        /* --- HALAMAN 4: GAME EDUKATIF (3 TINGKATAN) --- */
+        const GAME1_QUESTIONS = [
+            { sound: 'burung', hint: 'Dengarkan suara kicauan ini! Siapakah penghasil bunyinya?', options: [{id:'drum', name:'Drum', emoji:'🥁'}, {id:'burung', name:'Burung', emoji:'🐦'}, {id:'gitar', name:'Gitar', emoji:'🎸'}] },
+            { sound: 'drum', hint: 'Dug... dug... dug! Alat musik apakah yang berbunyi seperti ini?', options: [{id:'drum', name:'Drum', emoji:'🥁'}, {id:'lonceng', name:'Lonceng', emoji:'🔔'}, {id:'hujan', name:'Hujan', emoji:'🌧️'}] },
+            { sound: 'lonceng', hint: 'Teng... teng... teng! Benda apakah yang berbunyi nyaring ini?', options: [{id:'tepuk', name:'Tepuk Tangan', emoji:'👏'}, {id:'angin', name:'Angin', emoji:'🌬️'}, {id:'lonceng', name:'Lonceng', emoji:'🔔'}] },
+            { sound: 'hujan', hint: 'Tik... tik... tik! Bunyi alam apakah yang sedang kamu dengar?', options: [{id:'hujan', name:'Air Hujan', emoji:'🌧️'}, {id:'gitar', name:'Gitar', emoji:'🎸'}, {id:'marakas', name:'Marakas', emoji:'🪇'}] }
+        ];
+
+        const GAME3_QUESTIONS = [
+            { sound: 'peluit_panjang', vol: 0.7, label: 'Bunyi Peluit A', answer: 'Panjang', choices: ['Panjang', 'Pendek'] },
+            { sound: 'peluit_pendek', vol: 0.7, label: 'Bunyi Peluit B', answer: 'Pendek', choices: ['Panjang', 'Pendek'] },
+            { sound: 'drum', vol: 1.0, label: 'Pukulan Drum Kuat', answer: 'Keras', choices: ['Keras', 'Pelan'] },
+            { sound: 'hujan', vol: 0.25, label: 'Rintik Hujan Lembut', answer: 'Pelan', choices: ['Keras', 'Pelan'] }
+        ];
+
+        function renderGame(container) {
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-5 md:p-8 shadow-xl border-4 border-orange-400">
+                    <h2 class="text-2xl md:text-3xl font-kid font-bold text-orange-600 mb-4">🎮 Game Edukatif Dunia Bunyi</h2>
+                    
+                    <!-- Pilihan 3 Game -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                        <button onclick="state.activeGame=1; renderGame(document.getElementById('app-content'))" 
+                            class="btn-3d py-3 px-4 rounded-2xl font-kid font-bold text-base ${state.activeGame===1 ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-800'}">
+                            🔊 Game 1: Tebak Suara
+                        </button>
+                        <button onclick="state.activeGame=2; renderGame(document.getElementById('app-content'))" 
+                            class="btn-3d py-3 px-4 rounded-2xl font-kid font-bold text-base ${state.activeGame===2 ? 'bg-sky-500 text-white' : 'bg-sky-100 text-sky-800'}">
+                            🧩 Game 2: Pasangkan Bunyi
+                        </button>
+                        <button onclick="state.activeGame=3; renderGame(document.getElementById('app-content'))" 
+                            class="btn-3d py-3 px-4 rounded-2xl font-kid font-bold text-base ${state.activeGame===3 ? 'bg-emerald-500 text-white' : 'bg-emerald-100 text-emerald-800'}">
+                            🕵️ Game 3: Detektif Bunyi
+                        </button>
+                    </div>
+
+                    <div id="game-arena" class="bg-amber-50/70 border-3 border-amber-200 rounded-3xl p-5 md:p-6"></div>
+                </div>
+            `;
+
+            const arena = document.getElementById('game-arena');
+            if (state.activeGame === 1) renderGame1(arena);
+            else if (state.activeGame === 2) renderGame2(arena);
+            else renderGame3(arena);
+        }
+
+        function renderGame1(arena) {
+            const q = GAME1_QUESTIONS[state.game1Index];
+            arena.innerHTML = `
+                <div class="text-center max-w-xl mx-auto">
+                    <span class="bg-orange-200 text-orange-900 text-xs font-bold px-3 py-1 rounded-full">Soal ${state.game1Index + 1} dari ${GAME1_QUESTIONS.length} • Skor: ${state.game1Score}</span>
+                    <h3 class="text-xl md:text-2xl font-kid font-bold text-slate-800 mt-3 mb-4">${q.hint}</h3>
+                    
+                    <button onclick="playSoundEffect('${q.sound}')" class="btn-3d pulse-btn bg-sky-500 hover:bg-sky-600 text-white font-kid font-bold text-lg px-8 py-4 rounded-3xl mb-6 inline-flex items-center gap-3">
+                        <i class="fas fa-volume-up text-2xl"></i> Putar Suara Misterius
+                    </button>
+
+                    <div class="grid grid-cols-3 gap-3 md:gap-5">
+                        ${q.options.map(opt => `
+                            <button onclick="checkGame1('${opt.id}')" class="btn-3d bg-white hover:bg-yellow-50 border-3 border-sky-300 rounded-2xl p-4 flex flex-col items-center">
+                                <span class="text-4xl md:text-5xl mb-2">${opt.emoji}</span>
+                                <span class="font-kid font-bold text-base text-slate-800">${opt.name}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkGame1(chosenId) {
+            const q = GAME1_QUESTIONS[state.game1Index];
+            if (chosenId === q.sound) {
+                state.game1Score += 25;
+                addStars(2, "Tebakan suaramu tepat sekali!");
+                if (state.game1Index < GAME1_QUESTIONS.length - 1) {
+                    state.game1Index++;
+                    showFeedback(true, "Benar Sekali! 🎉", "Telingamu sangat tajam! Ayo lanjut ke suara berikutnya.");
+                } else {
+                    state.game1Index = 0;
+                    showFeedback(true, "Juara Tebak Suara! 🏆", `Kamu menyelesaikan semua soal dengan skor ${state.game1Score}!`);
+                    state.game1Score = 0;
+                }
+                renderGame(document.getElementById('app-content'));
+            } else {
+                showFeedback(false, "Hampir Tepat!", "Coba klik tombol Putar Suara Misterius sekali lagi dan dengarkan baik-baik ya!");
+            }
+        }
+
+        function renderGame2(arena) {
+            const pairs = [
+                { id: 'burung', left: '🐦 Burung', right: 'Bunyi Alam (Cit... cit...)' },
+                { id: 'drum', left: '🥁 Drum', right: 'Alat Musik Dipukul' },
+                { id: 'gitar', left: '🎸 Gitar', right: 'Alat Musik Dipetik' },
+                { id: 'tepuk', left: '👏 Tangan', right: 'Bunyi dari Manusia' }
+            ];
+            arena.innerHTML = `
+                <div class="max-w-2xl mx-auto">
+                    <h3 class="text-xl font-kid font-bold text-center text-slate-800 mb-2">🧩 Pasangkan Gambar dengan Sumber Bunyinya!</h3>
+                    <p class="text-center text-sm font-bold text-slate-600 mb-5">Klik kotak di sebelah kiri, lalu klik pasangannya di sebelah kanan.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-3">
+                            ${pairs.map(p => {
+                                const done = state.game2Matched.includes(p.id);
+                                const sel = state.game2SelectedLeft === p.id;
+                                return `
+                                    <button ${done ? 'disabled' : ''} onclick="selectGame2Left('${p.id}')" 
+                                        class="w-full py-3.5 px-4 rounded-2xl font-kid font-bold text-left border-3 transition ${done ? 'bg-emerald-200 border-emerald-400 text-emerald-900 opacity-70' : (sel ? 'bg-yellow-300 border-orange-500 scale-105' : 'bg-white border-sky-300 hover:bg-sky-50')}">
+                                        ${p.left} ${done ? '✅' : ''}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                        <div class="space-y-3">
+                            ${[pairs[2], pairs[0], pairs[3], pairs[1]].map(p => {
+                                const done = state.game2Matched.includes(p.id);
+                                return `
+                                    <button ${done ? 'disabled' : ''} onclick="selectGame2Right('${p.id}')" 
+                                        class="w-full py-3.5 px-4 rounded-2xl font-bold text-left text-sm md:text-base border-3 transition ${done ? 'bg-emerald-200 border-emerald-400 text-emerald-900 opacity-70' : 'bg-white border-purple-300 hover:bg-purple-50'}">
+                                        ${p.right}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                    ${state.game2Matched.length === 4 ? `
+                        <div class="text-center mt-5">
+                            <button onclick="state.game2Matched=[]; renderGame(document.getElementById('app-content'))" class="btn-3d bg-sky-500 text-white font-kid font-bold px-6 py-2.5 rounded-2xl">Main Lagi 🔄</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function selectGame2Left(id) {
+            state.game2SelectedLeft = id;
+            playSoundEffect(id);
+            renderGame(document.getElementById('app-content'));
+        }
+
+        function selectGame2Right(id) {
+            if (!state.game2SelectedLeft) {
+                showFeedback(false, "Pilih Kiri Dulu!", "Klik gambar benda di sebelah kiri terlebih dahulu ya!");
+                return;
+            }
+            if (state.game2SelectedLeft === id) {
+                state.game2Matched.push(id);
+                state.game2SelectedLeft = null;
+                addStars(2, "Pasangan bunyi cocok!");
+                playSoundEffect('benar');
+                if (state.game2Matched.length === 4) {
+                    showFeedback(true, "Semua Cocok! 🌟", "Hebat! Kamu berhasil memasangkan semua sumber bunyi!");
+                }
+            } else {
+                state.game2SelectedLeft = null;
+                showFeedback(false, "Belum Cocok", "Coba perhatikan lagi asal sumber bunyinya ya!");
+            }
+            renderGame(document.getElementById('app-content'));
+        }
+
+        function renderGame3(arena) {
+            const q = GAME3_QUESTIONS[state.game3Index];
+            arena.innerHTML = `
+                <div class="text-center max-w-xl mx-auto">
+                    <span class="bg-emerald-200 text-emerald-900 text-xs font-bold px-3 py-1 rounded-full">Misi Detektif ${state.game3Index + 1} dari ${GAME3_QUESTIONS.length}</span>
+                    <h3 class="text-xl md:text-2xl font-kid font-bold text-slate-800 mt-3 mb-2">🕵️ Dengarkan "${q.label}"</h3>
+                    <p class="text-sm font-bold text-slate-600 mb-5">Tentukan sifat bunyi yang kamu dengar!</p>
+
+                    <button onclick="playSoundEffect('${q.sound}', ${q.vol})" class="btn-3d pulse-btn bg-emerald-500 hover:bg-emerald-600 text-white font-kid font-bold text-lg px-8 py-4 rounded-3xl mb-6 inline-flex items-center gap-3">
+                        <i class="fas fa-headphones text-2xl"></i> Dengarkan Bukti Bunyi
+                    </button>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        ${q.choices.map(ch => `
+                            <button onclick="checkGame3('${ch}')" class="btn-3d bg-white hover:bg-emerald-50 border-3 border-emerald-400 rounded-2xl py-5 font-kid font-bold text-xl text-slate-800">
+                                Bunyi ${ch}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkGame3(ans) {
+            const q = GAME3_QUESTIONS[state.game3Index];
+            if (ans === q.answer) {
+                addStars(2, "Analisis Detektif Bunyi benar!");
+                if (state.game3Index < GAME3_QUESTIONS.length - 1) {
+                    state.game3Index++;
+                    showFeedback(true, "Tepat Sekali, Detektif! 🕵️", `Benar! Itu adalah bunyi ${q.answer}.`);
+                } else {
+                    state.game3Index = 0;
+                    showFeedback(true, "Misi Detektif Berhasil! 🎖️", "Kamu telah menjadi Detektif Bunyi yang handal!");
+                }
+                renderGame(document.getElementById('app-content'));
+            } else {
+                showFeedback(false, "Coba Dengarkan Lagi", "Klik tombol Dengarkan Bukti Bunyi dan perhatikan keras/pelan atau panjang/pendeknya.");
+            }
+        }
+
+        /* --- HALAMAN 5: LKPD INTERAKTIF & DAPAT DICETAK --- */
+        function renderLkpd(container) {
+            container.innerHTML = `
+                <div id="printable-area" class="bg-white rounded-3xl p-5 md:p-8 shadow-xl border-4 border-indigo-400">
+                    <div class="border-b-4 border-indigo-200 pb-4 mb-5 flex flex-wrap justify-between items-center gap-3">
+                        <div>
+                            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">LEMBAR KERJA PESERTA DIDIK (LKPD)</span>
+                            <h2 class="text-2xl md:text-3xl font-kid font-bold text-indigo-700 mt-1">📝 Petualangan Mencari Sumber Bunyi</h2>
+                            <p class="text-xs font-bold text-slate-500">SDN 2 PADAN • Mata Pelajaran: Seni Budaya (Kelas II Fase A)</p>
+                        </div>
+                        <div class="flex gap-2 no-print">
+                            <button onclick="saveLkpd()" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-2xl text-sm">
+                                💾 Simpan Jawaban
+                            </button>
+                            <button onclick="window.print()" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-2xl text-sm">
+                                🖨️ Cetak LKPD
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Identitas Siswa -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-indigo-50 p-4 rounded-2xl mb-6 border-2 border-indigo-200">
+                        <div>
+                            <label class="block text-xs font-bold text-indigo-900 mb-1">Nama Siswa:</label>
+                            <input type="text" id="lkpd-nama" value="${state.studentName}" oninput="state.studentName=this.value" placeholder="Tulis namamu..." class="w-full px-3 py-2 rounded-xl border border-indigo-300 font-bold text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-indigo-900 mb-1">Kelas:</label>
+                            <input type="text" value="II (Dua) - SDN 2 PADAN" class="w-full px-3 py-2 rounded-xl border border-indigo-300 font-bold text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-indigo-900 mb-1">Tanggal:</label>
+                            <input type="date" class="w-full px-3 py-2 rounded-xl border border-indigo-300 font-bold text-sm bg-white">
+                        </div>
+                    </div>
+
+                    <!-- Tabel Pengamatan Sumber Bunyi -->
+                    <h3 class="font-kid font-bold text-lg text-slate-800 mb-2">Kegiatan 1: Amati Benda dan Cara Menghasilkan Bunyinya</h3>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="w-full border-collapse border-2 border-indigo-300 text-sm">
+                            <thead>
+                                <tr class="bg-indigo-100 text-indigo-950 font-kid">
+                                    <th class="border-2 border-indigo-300 p-2.5 w-12">No</th>
+                                    <th class="border-2 border-indigo-300 p-2.5">Nama Benda</th>
+                                    <th class="border-2 border-indigo-300 p-2.5">Cara Menghasilkan Bunyi</th>
+                                    <th class="border-2 border-indigo-300 p-2.5">Bunyi yang Terdengar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${[
+                                    { no: 1, benda: '🪵 Meja', cara: 'Diketuk', bunyi: 'Tok... tok... tok...' },
+                                    { no: 2, benda: '🧴 Botol berisi biji', cara: 'Digoyangkan', bunyi: 'Cek... cek... cek...' },
+                                    { no: 3, benda: '🔔 Lonceng', cara: 'Digoyangkan', bunyi: 'Teng... teng... teng...' },
+                                    { no: 4, benda: '👏 Tangan', cara: '', bunyi: '' },
+                                    { no: 5, benda: '🥁 Drum', cara: '', bunyi: '' }
+                                ].map(row => `
+                                    <tr>
+                                        <td class="border-2 border-indigo-300 p-2 text-center font-bold">${row.no}</td>
+                                        <td class="border-2 border-indigo-300 p-2 font-bold">${row.benda}</td>
+                                        <td class="border-2 border-indigo-300 p-2">
+                                            <input type="text" value="${row.cara}" placeholder="Isi cara membunyikan..." class="w-full px-2 py-1 rounded border border-slate-300 font-semibold">
+                                        </td>
+                                        <td class="border-2 border-indigo-300 p-2">
+                                            <input type="text" value="${row.bunyi}" placeholder="Isi tiruan bunyinya..." class="w-full px-2 py-1 rounded border border-slate-300 font-semibold">
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Kegiatan Tambahan & Pola Tepuk -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200">
+                            <h4 class="font-kid font-bold text-amber-900 mb-2">Kegiatan 2: Temukan 3 Sumber Bunyi di Rumah/Sekolah</h4>
+                            <input type="text" placeholder="1. Contoh: Jam dinding..." class="w-full mb-2 px-3 py-1.5 rounded-xl border border-amber-300 text-sm font-semibold bg-white">
+                            <input type="text" placeholder="2. ..." class="w-full mb-2 px-3 py-1.5 rounded-xl border border-amber-300 text-sm font-semibold bg-white">
+                            <input type="text" placeholder="3. ..." class="w-full px-3 py-1.5 rounded-xl border border-amber-300 text-sm font-semibold bg-white">
+                        </div>
+                        <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200">
+                            <h4 class="font-kid font-bold text-emerald-900 mb-2">Kegiatan 3: Buat Pola Bunyi Tepuk Tangan</h4>
+                            <p class="text-xs font-bold text-emerald-800 mb-2">Contoh pola: PROK - PROK - DIAM - PROK</p>
+                            <input type="text" placeholder="Tulis pola tepuk tangan buatanmu..." class="w-full mb-2 px-3 py-2 rounded-xl border border-emerald-300 text-sm font-semibold bg-white">
+                            <textarea rows="2" placeholder="Ceritakan pengalamanmu setelah belajar tentang bunyi..." class="w-full px-3 py-1.5 rounded-xl border border-emerald-300 text-sm font-semibold bg-white"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-2 no-print">
+                        <button onclick="renderLkpd(document.getElementById('app-content'))" class="btn-3d bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-2xl text-sm">
+                            🔄 Reset LKPD
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function saveLkpd() {
+            addStars(5, "LKPD berhasil disimpan!");
+            showFeedback(true, "LKPD Tersimpan! 📝", "Hebat! Jawaban LKPD kamu sudah tersimpan dan kamu mendapatkan 5 Bintang!");
+        }
+
+        /* --- HALAMAN 6: EVALUASI 10 SOAL PILIHAN GANDA --- */
+        const EVAL_QUESTIONS = [
+            { q: "1. Bunyi dapat kita dengar menggunakan ....", opts: ["Mata", "Telinga", "Hidung", "Tangan"], ans: 1, exp: "Telinga adalah indra pendengaran yang Tuhan ciptakan untuk mendengar bunyi." },
+            { q: "2. Suara kicauan burung termasuk bunyi yang berasal dari ....", opts: ["Alam", "Alat musik", "Mesin", "Kertas"], ans: 0, exp: "Burung adalah makhluk ciptaan Tuhan di alam, sehingga suaranya termasuk bunyi alam." },
+            { q: "3. Alat musik di bawah ini yang dimainkan dengan cara dipukul adalah ....", opts: ["Gitar", "Seruling", "Drum", "Biola"], ans: 2, exp: "Drum dimainkan dengan cara dipukul menggunakan stik drum." },
+            { q: "4. Bunyi rintik hujan 'tik... tik... tik...' berasal dari ....", opts: ["Alam", "Manusia", "Mobil", "Televisi"], ans: 0, exp: "Hujan adalah peristiwa alam sehingga menghasilkan bunyi alam." },
+            { q: "5. Bunyi yang terdengar kuat berbeda dengan bunyi yang terdengar ....", opts: ["Tinggi", "Pelan", "Panjang", "Cepat"], ans: 1, exp: "Lawan dari bunyi keras (kuat) adalah bunyi pelan (lemah)." },
+            { q: "6. Ketika kedua telapak tangan kita tepukkan, akan menghasilkan ....", opts: ["Cahaya", "Bunyi", "Air", "Angin"], ans: 1, exp: "Tepukan tangan menimbulkan getaran udara yang menghasilkan bunyi 'prok... prok...'." },
+            { q: "7. Bunyi lonceng dapat dihasilkan dengan cara ....", opts: ["Ditiup", "Digoyangkan", "Dipetik", "Dilipat"], ans: 1, exp: "Lonceng berbunyi 'teng... teng...' ketika digoyangkan." },
+            { q: "8. Bunyi peluit yang berlangsung lama disebut bunyi ....", opts: ["Pendek", "Panjang", "Pelan", "Kecil"], ans: 1, exp: "Durasi bunyi yang terdengar lama disebut bunyi panjang." },
+            { q: "9. Contoh bunyi yang sering kita dengar di lingkungan sekolah adalah ....", opts: ["Ombak laut", "Bel sekolah berbunyi", "Suara singa", "Pesawat mendarat"], ans: 1, exp: "Bel sekolah berbunyi saat jam masuk, istirahat, dan pulang sekolah." },
+            { q: "10. Alat musik sederhana marakas dapat kita buat dari bahan bekas berupa ....", opts: ["Batu besar", "Botol plastik diisi beras", "Kertas basah", "Daun kering"], ans: 1, exp: "Botol plastik bekas yang diisi beras atau biji-bijian dapat digoyangkan seperti marakas." }
+        ];
+
+        function renderEvaluasi(container) {
+            let predikat = "";
+            let motivasi = "";
+            if (state.evalSubmitted) {
+                if (state.evalScore >= 90) { predikat = "SANGAT BAIK 🌟"; motivasi = "Luar biasa! Kamu benar-benar menguasai Dunia Bunyi!"; }
+                else if (state.evalScore >= 80) { predikat = "BAIK 👏"; motivasi = "Hebat! Hasil belajarmu sudah sangat bagus!"; }
+                else if (state.evalScore >= 70) { predikat = "CUKUP 👍"; motivasi = "Bagus! Terus berlatih mengenali bunyi di sekitarmu ya!"; }
+                else { predikat = "AYO BELAJAR LAGI! 💪"; motivasi = "Jangan menyerah! Ayo baca kembali Materi dan coba lagi ya!"; }
+            }
+
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-5 md:p-8 shadow-xl border-4 border-rose-400">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-kid font-bold text-rose-600">🏆 Evaluasi Pembelajaran (10 Soal)</h2>
+                            <p class="text-sm font-bold text-slate-600">Pilihlah jawaban yang paling tepat! Setiap soal benar bernilai 10 poin.</p>
+                        </div>
+                        ${state.evalSubmitted ? `
+                            <button onclick="resetEvaluasi()" class="btn-3d bg-amber-400 text-slate-900 font-kid font-bold px-4 py-2 rounded-2xl text-sm">
+                                🔄 Ulangi Evaluasi
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    ${state.evalSubmitted ? `
+                        <div class="bg-gradient-to-r from-yellow-100 via-amber-100 to-orange-100 border-4 border-yellow-400 rounded-3xl p-6 text-center mb-6 shadow-md">
+                            <p class="text-sm font-bold text-amber-800 uppercase">Nilai Akhir Evaluasi Kamu</p>
+                            <div class="text-5xl md:text-6xl font-kid font-bold text-rose-600 my-2">${state.evalScore}</div>
+                            <span class="inline-block bg-emerald-500 text-white font-kid font-bold px-4 py-1 rounded-full text-lg mb-2">${predikat}</span>
+                            <p class="font-bold text-slate-700 text-base">${motivasi}</p>
+                            <button onclick="navigateTo('sertifikat')" class="btn-3d mt-4 bg-sky-500 hover:bg-sky-600 text-white font-kid font-bold px-6 py-2.5 rounded-2xl">
+                                🎖️ Lihat Sertifikat Penghargaan
+                            </button>
+                        </div>
+                    ` : ''}
+
+                    <div class="space-y-5">
+                        ${EVAL_QUESTIONS.map((item, qIdx) => `
+                            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 md:p-5">
+                                <div class="flex items-start justify-between gap-2 mb-3">
+                                    <p class="font-bold text-slate-800 text-base md:text-lg">${item.q}</p>
+                                    <button onclick="speakText('${item.q}')" class="shrink-0 bg-sky-100 hover:bg-sky-200 text-sky-700 px-2.5 py-1 rounded-xl text-xs font-bold" title="Bacakan Soal">
+                                        🔊 Baca
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    ${item.opts.map((opt, oIdx) => {
+                                        const selected = state.evalAnswers[qIdx] === oIdx;
+                                        let styleClass = selected ? 'bg-sky-500 text-white border-sky-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-sky-50';
+                                        if (state.evalSubmitted) {
+                                            if (oIdx === item.ans) styleClass = 'bg-emerald-500 text-white border-emerald-600';
+                                            else if (selected && oIdx !== item.ans) styleClass = 'bg-rose-500 text-white border-rose-600';
+                                        }
+                                        return `
+                                            <button ${state.evalSubmitted ? 'disabled' : ''} onclick="selectEvalAnswer(${qIdx}, ${oIdx})" 
+                                                class="text-left px-4 py-3 rounded-xl border-2 font-bold text-sm md:text-base transition ${styleClass}">
+                                                ${String.fromCharCode(65 + oIdx)}. ${opt}
+                                            </button>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                ${state.evalSubmitted ? `
+                                    <div class="mt-3 p-3 rounded-xl text-xs md:text-sm font-bold ${state.evalAnswers[qIdx] === item.ans ? 'bg-emerald-100 text-emerald-900' : 'bg-amber-100 text-amber-900'}">
+                                        ${state.evalAnswers[qIdx] === item.ans ? '✅ Benar!' : '💡 Pembahasan:'} ${item.exp}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    ${!state.evalSubmitted ? `
+                        <button onclick="submitEvaluasi()" class="btn-3d mt-6 w-full bg-rose-500 hover:bg-rose-600 text-white font-kid font-bold py-4 rounded-2xl text-xl">
+                            🎯 Periksa Hasil Evaluasi
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function selectEvalAnswer(qIdx, oIdx) {
+            state.evalAnswers[qIdx] = oIdx;
+            renderEvaluasi(document.getElementById('app-content'));
+        }
+
+        function submitEvaluasi() {
+            if (Object.keys(state.evalAnswers).length < EVAL_QUESTIONS.length) {
+                showFeedback(false, "Belum Selesai!", "Ayo lengkapi semua 10 jawaban terlebih dahulu sebelum memeriksa hasil ya!");
+                return;
+            }
+            let score = 0;
+            EVAL_QUESTIONS.forEach((item, idx) => {
+                if (state.evalAnswers[idx] === item.ans) score += 10;
+            });
+            state.evalScore = score;
+            state.evalSubmitted = true;
+            addStars(Math.floor(score / 10), `Evaluasi selesai dengan nilai ${score}!`);
+            renderEvaluasi(document.getElementById('app-content'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetEvaluasi() {
+            state.evalAnswers = {};
+            state.evalSubmitted = false;
+            state.evalScore = 0;
+            renderEvaluasi(document.getElementById('app-content'));
+        }
+
+        /* --- FITUR TAMBAHAN: SERTIFIKAT PENGHARGAAN DIGITAL --- */
+        function renderSertifikat(container) {
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-5 md:p-8 shadow-xl border-4 border-yellow-400">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5 no-print">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-kid font-bold text-amber-600">🎖️ Sertifikat Penghargaan</h2>
+                            <p class="text-sm font-bold text-slate-600">Ketik namamu di bawah ini lalu cetak sertifikat hebatmu!</p>
+                        </div>
+                        <button onclick="window.print()" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-kid font-bold px-5 py-2.5 rounded-2xl">
+                            🖨️ Cetak Sertifikat
+                        </button>
+                    </div>
+
+                    <div class="max-w-md mx-auto mb-6 no-print">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Masukkan Nama Lengkap Siswa:</label>
+                        <input type="text" value="${state.studentName}" oninput="state.studentName=this.value; document.getElementById('cert-name-display').innerText = this.value || 'Siswa Hebat Kelas II';" 
+                            placeholder="Ketik namamu di sini..." class="w-full px-4 py-3 rounded-2xl border-3 border-amber-400 font-kid font-bold text-lg text-center">
+                    </div>
+
+                    <!-- Bingkai Sertifikat Siap Cetak -->
+                    <div id="printable-area" class="bg-gradient-to-br from-yellow-50 via-white to-sky-50 border-8 border-double border-amber-400 rounded-3xl p-6 md:p-10 text-center shadow-lg relative">
+                        <div class="text-5xl mb-2">🏆🎵🌟</div>
+                        <h3 class="text-2xl md:text-4xl font-kid font-bold text-sky-700 tracking-wide">SERTIFIKAT PENGHARGAAN</h3>
+                        <p class="text-sm md:text-base font-bold text-amber-700 mt-1">Diberikan dengan bangga kepada:</p>
+                        
+                        <div id="cert-name-display" class="text-3xl md:text-4xl font-kid font-bold text-orange-600 my-4 py-2 border-b-4 border-dashed border-amber-300 max-w-lg mx-auto">
+                            ${state.studentName || 'Siswa Hebat Kelas II'}
+                        </div>
+
+                        <p class="text-lg md:text-xl font-kid font-bold text-emerald-700 mb-2">
+                            "Aku Hebat, Detektif Bunyi!"
+                        </p>
+                        <p class="text-sm md:text-base font-semibold text-slate-600 max-w-xl mx-auto mb-6">
+                            Telah mengikuti pembelajaran interaktif Seni Budaya materi <b>Akses Bunyi</b> dengan ceria, aktif, dan kreatif di <b>SDN 2 PADAN</b>.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row justify-around items-center gap-6 pt-4 border-t border-amber-200 text-sm font-bold text-slate-700">
+                            <div>
+                                <p>Total Bintang Terkumpul:</p>
+                                <p class="text-xl text-amber-600 font-kid">⭐ ${state.stars} Bintang</p>
+                            </div>
+                            <div>
+                                <p>Guru Kelas II / Pengembang MPI</p>
+                                <div class="h-10"></div>
+                                <p class="underline font-extrabold text-slate-900">Ajumsinah, S.Pd.</p>
+                                <p class="text-xs text-slate-500">SDN 2 PADAN</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* --- HALAMAN 7: PENGEMBANG --- */
+        function renderPengembang(container) {
+            container.innerHTML = `
+                <div class="bg-white/95 rounded-3xl p-6 md:p-10 shadow-xl border-4 border-teal-400 text-center max-w-3xl mx-auto">
+                    <span class="bg-teal-100 text-teal-800 text-xs font-bold px-4 py-1.5 rounded-full">PROFIL PENGEMBANG MEDIA</span>
+                    <h2 class="text-2xl md:text-3xl font-kid font-bold text-teal-700 mt-3 mb-6">👩‍🏫 Tentang Pengembang MPI</h2>
+
+                    <!-- Ilustrasi Guru dan Siswa Belajar Musik -->
+                    <div class="w-40 h-40 mx-auto bg-gradient-to-br from-teal-200 to-sky-200 rounded-full flex items-center justify-center border-4 border-white shadow-lg mb-5">
+                        <span class="text-7xl">👩‍🏫🎶</span>
+                    </div>
+
+                    <h3 class="text-2xl md:text-3xl font-kid font-bold text-slate-800">Ajumsinah, S.Pd.</h3>
+                    <p class="text-lg font-bold text-teal-600 mb-4">Guru Kelas II • SDN 2 PADAN</p>
+
+                    <div class="bg-teal-50 border-2 border-teal-200 rounded-2xl p-5 text-left max-w-lg mx-auto space-y-2 text-sm md:text-base font-bold text-slate-700 mb-6">
+                        <p>📌 <b>Judul Media:</b> AYO MENGENAL DUNIA BUNYI!</p>
+                        <p>📚 <b>Mata Pelajaran:</b> Seni Budaya (Seni Musik)</p>
+                        <p>🎓 <b>Sasaran:</b> Siswa Kelas II Sekolah Dasar (Fase A)</p>
+                        <p>🏫 <b>Instansi:</b> SDN 2 PADAN</p>
+                    </div>
+
+                    <div class="bg-amber-100 border-2 border-amber-300 rounded-2xl p-4 max-w-lg mx-auto">
+                        <p class="font-kid font-bold text-lg text-amber-900">
+                            "Belajar bunyi, berkreasi dengan gembira!"
+                        </p>
+                        <p class="text-xs font-semibold text-amber-800 mt-1">
+                            Terima kasih kepada seluruh siswa hebat kelas II SDN 2 PADAN yang telah belajar dengan penuh semangat.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* =========================================================================
+           5. INISIALISASI SAAT HALAMAN DIMUAT
+           ========================================================================= */
+        window.onload = function() {
+            renderCurrentPage();
+            // Muat daftar suara speech synthesis jika tersedia
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
+        };
+    </script>
+</body>
+</html>
